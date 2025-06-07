@@ -8,8 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <!-- Librerías para Descargar en Word -->
-    <script src="https://unpkg.com/html-docx-js/dist/html-docx.js"></script>
+    <!-- ÚNICA LIBRERÍA NECESARIA PARA DESCARGAR -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <style>
@@ -20,7 +19,7 @@
             transition: max-height 0.3s ease-out;
             overflow: hidden;
         }
-        /* --- Estilos Corregidos para el Mensaje Flotante --- */
+        /* --- Estilos para el Mensaje Flotante de Carga --- */
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -70,7 +69,7 @@
     <div id="loader-overlay" class="loader-overlay">
         <div class="loader-content">
             <div class="spinner"></div>
-            <span class="text-lg font-semibold text-slate-700">Generando ruta a seguir...</span>
+            <span id="loader-text" class="text-lg font-semibold text-slate-700">Generando...</span>
         </div>
     </div>
 
@@ -79,7 +78,7 @@
         <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-10">
             
             <header class="text-center mb-8">
-                 <div class="flex justify-center items-center gap-4">
+                <div class="flex justify-center items-center gap-4">
                     <svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h1a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.881 4.042A.25.25 0 007.63 3.5H4.37a.25.25 0 00-.251.542l.38 1.903A2 2 0 006.38 7.5H7.5a2 2 0 002-2V4.618l-.619-.576zM16.119 4.042a.25.25 0 01.251-.542h3.259a.25.25 0 01.251.542l-.38 1.903A2 2 0 0117.62 7.5H16.5a2 2 0 01-2-2V4.618l.619-.576z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11v1m0 4v1m0-8v1"></path></svg>
                     <h1 class="text-3xl md:text-4xl font-bold text-slate-800">Solucionador de Problemas Docentes</h1>
                 </div>
@@ -90,17 +89,20 @@
                 <p class="mb-6 text-slate-700"><b>Paso 1:</b> Seleccione la categoría y el problema que enfrenta. Luego, haga clic en el botón para generar su guía de acción.</p>
 
                 <div id="accordion-container" class="space-y-4">
-                    <!-- Todos los acordeones van aquí (sin cambios en su HTML interno) -->
                     <!-- Category 1 -->
                     <div class="border border-slate-200 rounded-lg">
                         <button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700">1. Conflictos y Violencia en el Entorno Laboral</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button>
                         <div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><option value="">-- Seleccione un problema --</option><option value="acoso-laboral">Acoso laboral (hostigamiento sistemático)</option><option value="agresion-director">Agresión psicológica o verbal del Director/a</option><option value="agresion-colega">Agresión psicológica o verbal de un colega</option><option value="abuso-autoridad">Abuso de autoridad (órdenes ajenas a la función, trato despótico)</option><option value="discriminacion-laboral">Discriminación (por origen, género, opinión, etc.)</option><option value="difamacion">Calumnia o difamación por parte de personal de la I.E.</option><option value="carga-horaria-injusta">Asignación injusta de carga horaria o funciones</option></select></div></div>
                     </div>
-                    <!-- Category 2, 3, 4, 5, 6... -->
+                    <!-- Category 2 -->
                     <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700">2. Procesos Administrativos y Sanciones</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><option value="">-- Seleccione un problema --</option><option value="memorandum">Recepción de memorándum (tardanza, inasistencia, etc.)</option><option value="proceso-amonestacion">Inicio de proceso de amonestación o suspensión</option><option value="inicio-pad">Inicio de Proceso Administrativo Disciplinario (PAD)</option><option value="problemas-contrato">Problemas con la renovación de contrato (CAS/Nombramiento)</option><option value="problemas-pagos">Problemas con pagos (demoras, descuentos indebidos)</option><option value="negativa-licencia">Negativa o demora en trámite de licencias (salud, maternidad, etc.)</option><option value="cese-arbitrario">Cese arbitrario o no justificado</option></select></div></div></div>
+                    <!-- Category 3 -->
                     <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700">3. Acusaciones Graves (de Estudiantes, Padres o Terceros)</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><option value="">-- Seleccione un problema --</option><option value="acusacion-tocamientos">Denuncia por tocamientos indebidos o acoso sexual</option><option value="acusacion-violacion">Acusación o denuncia por violación</option><option value="acusacion-agresion-fisica">Denuncia por agresión física a un estudiante</option><option value="acusacion-agresion-psicologica">Denuncia por agresión psicológica (bullying) a un estudiante</option><option value="acusacion-discriminacion-estudiante">Denuncia por discriminación a un estudiante</option><option value="acusacion-cobros-indebidos">Acusación por cobros indebidos a padres de familia</option></select></div></div></div>
+                    <!-- Category 4 -->
                     <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700">4. Conflictos con Padres de Familia</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><option value="">-- Seleccione un problema --</option><option value="agresion-padres">Agresión verbal, amenaza o difamación por parte de un padre/madre</option><option value="quejas-infundadas">Presentación de quejas o denuncias infundadas</option><option value="interferencia-labor">Interferencia constante en la labor pedagógica</option><option value="ciberacoso-padres">Ciberacoso por parte de padres o familiares</option></select></div></div></div>
+                    <!-- Category 5 -->
                     <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700">5. Derechos y Condiciones Laborales</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><option value="">-- Seleccione un problema --</option><option value="infraestructura-deficiente">Condiciones de infraestructura deficientes o inseguras</option><option value="falta-materiales">Falta de materiales y recursos pedagógicos básicos</option><option value="vulneracion-sindical">Vulneración del derecho a la libre sindicalización</option><option value="problemas-evaluacion">Problemas con la Evaluación de Desempeño o Ascenso</option><option value="sobrecarga-laboral">Sobrecarga laboral que afecta la salud (burnout)</option></select></div></div></div>
+                    <!-- Category 6 -->
                     <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700">6. Problemas con la UGEL / DRE</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"><option value="">-- Seleccione un problema --</option><option value="trato-hostil-ugel">Trato hostil o negligente de personal administrativo</option><option value="demora-tramites">Demora excesiva en trámites (resoluciones, pagos, etc.)</option><option value="falta-respuesta-ugel">Falta de respuesta a solicitudes o denuncias presentadas</option><option value="informacion-erronea">Información administrativa contradictoria o errónea</option></select></div></div></div>
                 </div>
 
@@ -135,12 +137,14 @@
                     const content = header.nextElementSibling;
                     const svg = header.querySelector('svg');
                     const isExpanded = content.style.maxHeight && content.style.maxHeight !== '0px';
+                    
                     accordionHeaders.forEach(otherHeader => {
                         if (otherHeader !== header) {
                            otherHeader.nextElementSibling.style.maxHeight = '0px';
                            otherHeader.querySelector('svg').classList.remove('rotate-180');
                         }
                     });
+
                     if (isExpanded) {
                         content.style.maxHeight = '0px';
                         svg.classList.remove('rotate-180');
@@ -155,7 +159,9 @@
                 selector.addEventListener('change', (event) => {
                     const selectedValue = event.target.value;
                     const selectedText = event.target.options[event.target.selectedIndex].text;
+                    
                     problemSelectors.forEach(s => { if (s !== selector) s.value = ''; });
+
                     if (selectedValue) {
                         currentSelection = { id: selectedValue, text: selectedText };
                         generateBtn.classList.remove('hidden');
@@ -175,6 +181,8 @@
             });
 
             async function generarHojaDeRuta(problemaId, problemaTexto) {
+                const loaderText = loaderOverlay.querySelector('#loader-text');
+                loaderText.textContent = 'Generando ruta a seguir...';
                 loaderOverlay.classList.add('visible');
                 resultadoDiv.innerHTML = '';
                 
@@ -202,25 +210,37 @@
                     `;
                     resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     
-                    document.getElementById('download-btn').addEventListener('click', () => {
-                        // --- CORRECCIÓN FINAL PARA TILDES Y COMPATIBILIDAD MÓVIL ---
-                        
-                        // 1. Se crea un documento HTML completo con la codificación UTF-8
-                        const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
-                            "xmlns:w='urn:schemas-microsoft-com:office:word' " +
-                            "xmlns='http://www.w3.org/TR/REC-html40'>" +
-                            "<head><meta charset='utf-8'><title>Hoja de Ruta</title></head><body>";
-                        
-                        const content = document.getElementById('content-to-download').innerHTML;
-                        const footer = "</body></html>";
-                        const fullHtml = header + content + footer;
+                    document.getElementById('download-btn').addEventListener('click', async () => {
+                        const loaderText = loaderOverlay.querySelector('#loader-text');
+                        loaderText.textContent = 'Generando documento...';
+                        loaderOverlay.classList.add('visible');
 
-                        // 2. Usamos la librería html-docx-js, que ahora procesará el HTML completo
-                        // y generará un blob compatible con .docx real.
-                        const converted = htmlDocx.asBlob(fullHtml);
+                        const htmlContent = document.getElementById('content-to-download').innerHTML;
+                        const problemTitle = currentSelection.text;
                         
-                        // 3. Usamos FileSaver.js para guardar el archivo, que funciona en todos los dispositivos.
-                        saveAs(converted, `Hoja de Ruta - ${problemaTexto}.docx`);
+                        try {
+                            const response = await fetch('/api/generate-word', { // Ruta para Netlify
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ htmlContent, problemTitle }) // ENVIAMOS TÍTULO Y HTML
+                            });
+
+                            if (!response.ok) {
+                                throw new Error('Error en el servidor al generar el documento.');
+                            }
+
+                            const blob = await response.blob();
+                            saveAs(blob, `Hoja de Ruta - ${problemTitle}.docx`);
+                            loaderOverlay.classList.remove('visible'); // Ocultar solo en caso de éxito
+
+                        } catch (error) {
+                            console.error("Error al descargar el documento:", error);
+                            loaderText.textContent = 'Error al generar';
+                            // Dejar el mensaje de error visible por 2 segundos
+                            setTimeout(() => {
+                                loaderOverlay.classList.remove('visible');
+                            }, 2000);
+                        }
                     });
 
                 } else {
@@ -229,10 +249,10 @@
             }
             
             async function callGeminiAPI(problemaTexto) {
-                const prompt = `Actúa como un abogado experto en legislación educativa peruana y derecho administrativo, con un tono empático y de apoyo. Un docente de educación básica en Perú necesita ayuda con el siguiente problema: "${problemaTexto}". Genera una "Hoja de Ruta" detallada. La respuesta DEBE ESTAR EN FORMATO HTML, usando <h3>, <h4>, <p>, <ol>, <ul>, <li>, <strong>, y clases de Tailwind CSS. La estructura debe ser: 1. Contenedor principal ('p-6 border-l-4'). 2. Título principal (<h3>). 3. Introducción (<p>). 4. Sección "Paso a Paso" (<h4>) con lista ordenada (<ol>). 5. Sección "Marco Normativo Clave" (<h4>) con lista (<ul>). 6. Sección "¡MUY IMPORTANTE!" (<h4>) con consejos. El contenido debe ser preciso para el contexto peruano. NO incluyas la etiqueta \`\`\`html al inicio de tu respuesta.`;
+                const prompt = `Actúa como un abogado experto en legislación educativa peruana y derecho administrativo, con un tono empático y de apoyo. Un docente de educación básica en Perú necesita ayuda con el siguiente problema: "${problemaTexto}". Genera una "Hoja de Ruta" detallada. La respuesta DEBE ESTAR EN FORMATO HTML, usando <h3> para el título principal, <h4> para subtítulos, <p>, <ul>, <li>, <strong>, y clases de Tailwind CSS. La estructura debe ser clara y profesional. NO incluyas la etiqueta \`\`\`html al inicio o final de tu respuesta.`;
 
                 try {
-                    const response = await fetch('/api/gemini-api', {
+                    const response = await fetch('/api/gemini-api', { // Ruta para Netlify
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ prompt: prompt })
@@ -257,6 +277,7 @@
             }
 
             function getStaticContent() {
+                // El contenido estático no ha cambiado
                 return `
                     <div class="p-6 border-l-4 border-red-500 bg-red-50 rounded-lg">
                         <h3 class="text-2xl font-bold text-red-800 mb-4">Hoja de Ruta: Denuncia por Tocamientos Indebidos o Acoso Sexual</h3>
@@ -296,11 +317,11 @@
                                 </ul>
                             </div>
                             <div>
-                                <h4 class="font-bold text-lg text-slate-800 mb-2">¡MUY IMPORTANTE!</h4>
+                                <h4 class="font-bold text-lg text-red-800 mb-2">¡MUY IMPORTANTE!</h4>
                                 <ul class="list-disc list-inside space-y-2 text-red-700">
-                                   <li><strong>Nunca intente contactar al denunciante</strong> o a su familia para "aclarar" el problema por su cuenta. Esto puede ser interpretado como obstrucción o coacción.</li>
-                                   <li><strong>Cuide su salud mental.</strong> Enfrentar una acusación así es devastador. Busque apoyo psicológico profesional.</li>
-                                   <li>La carga de la prueba recae en quien acusa. Exija que se respete su <strong>presunción de inocencia</strong>.</li>
+                                    <li><strong>Nunca intente contactar al denunciante</strong> o a su familia para "aclarar" el problema por su cuenta. Esto puede ser interpretado como obstrucción o coacción.</li>
+                                    <li><strong>Cuide su salud mental.</strong> Enfrentar una acusación así es devastador. Busque apoyo psicológico profesional.</li>
+                                    <li>La carga de la prueba recae en quien acusa. Exija que se respete su <strong>presunción de inocencia</strong>.</li>
                                 </ul>
                             </div>
                         </div>
