@@ -20,7 +20,7 @@
             transition: max-height 0.3s ease-out;
             overflow: hidden;
         }
-        /* --- ESTILOS CORREGIDOS PARA EL MENSAJE FLOTANTE --- */
+        /* --- Estilos Corregidos para el Mensaje Flotante --- */
         .loader-overlay {
             position: fixed;
             top: 0;
@@ -203,28 +203,24 @@
                     resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     
                     document.getElementById('download-btn').addEventListener('click', () => {
-                        // --- CORRECCIÓN DEFINITIVA PARA TILDES EN WORD ---
-                        // 1. Preparamos el encabezado HTML correcto
+                        // --- CORRECCIÓN FINAL PARA TILDES Y COMPATIBILIDAD MÓVIL ---
+                        
+                        // 1. Se crea un documento HTML completo con la codificación UTF-8
                         const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' " +
                             "xmlns:w='urn:schemas-microsoft-com:office:word' " +
                             "xmlns='http://www.w3.org/TR/REC-html40'>" +
                             "<head><meta charset='utf-8'><title>Hoja de Ruta</title></head><body>";
                         
-                        // 2. Obtenemos el contenido
                         const content = document.getElementById('content-to-download').innerHTML;
                         const footer = "</body></html>";
+                        const fullHtml = header + content + footer;
 
-                        // 3. Unimos todo para formar un documento HTML completo
-                        const sourceHTML = header + content + footer;
-
-                        const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+                        // 2. Usamos la librería html-docx-js, que ahora procesará el HTML completo
+                        // y generará un blob compatible con .docx real.
+                        const converted = htmlDocx.asBlob(fullHtml);
                         
-                        const fileDownload = document.createElement("a");
-                        document.body.appendChild(fileDownload);
-                        fileDownload.href = source;
-                        fileDownload.download = `Hoja de Ruta - ${problemaTexto}.doc`;
-                        fileDownload.click();
-                        document.body.removeChild(fileDownload);
+                        // 3. Usamos FileSaver.js para guardar el archivo, que funciona en todos los dispositivos.
+                        saveAs(converted, `Hoja de Ruta - ${problemaTexto}.docx`);
                     });
 
                 } else {
@@ -300,7 +296,7 @@
                                 </ul>
                             </div>
                             <div>
-                                <h4 class="font-bold text-lg text-red-800 mb-2">¡MUY IMPORTANTE!</h4>
+                                <h4 class="font-bold text-lg text-slate-800 mb-2">¡MUY IMPORTANTE!</h4>
                                 <ul class="list-disc list-inside space-y-2 text-red-700">
                                    <li><strong>Nunca intente contactar al denunciante</strong> o a su familia para "aclarar" el problema por su cuenta. Esto puede ser interpretado como obstrucción o coacción.</li>
                                    <li><strong>Cuide su salud mental.</strong> Enfrentar una acusación así es devastador. Busque apoyo psicológico profesional.</li>
