@@ -1,0 +1,12 @@
+# Configuración para el despliegue en Netlify
+[build]
+  # El directorio de publicación ahora es la raíz del proyecto.
+  publish = "."
+  # El directorio de las funciones no cambia.
+  functions = "netlify/functions"
+
+# La regla de redirección para la API no cambia.
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200

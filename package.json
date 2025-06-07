@@ -1,0 +1,14 @@
+{
+  "name": "solucionador-docente-peru",
+  "version": "1.0.0",
+  "description": "Solucionador de problemas para docentes peruanos con IA",
+  "main": "index.js",
+  "scripts": {
+    "start": "netlify dev"
+  },
+  "author": "Juan Manuel Caicedo Oliva",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  }
+}
