@@ -1,0 +1,15 @@
+{
+  "name": "solucionador-docente-interactivo",
+  "version": "1.0.0",
+  "description": "Generador de hojas de ruta para docentes en Perú, de forma modular e interactiva.",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tu Nombre Aquí",
+  "license": "ISC",
+  "dependencies": {
+    "docx": "^8.5.0",
+    "node-fetch": "^2.7.0"
+  }
+}

@@ -1,0 +1,11 @@
+# Archivo de configuración para Netlify
+
+[build]
+  # Directorio donde se encuentran las funciones serverless
+  functions = "netlify/functions"
+
+[functions]
+  # Aumenta el tiempo de espera máximo para las funciones si es necesario en un plan de pago.
+  # En el plan gratuito, el límite es de 10 segundos para respuestas síncronas.
+  # Con nuestro nuevo método modular, esto ya no será un problema.
+  node_bundler = "esbuild"

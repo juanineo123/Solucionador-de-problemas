@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solucionador de Conflictos Docentes</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* CSS COMPLETO INCORPORADO DIRECTAMENTE */
+        body { font-family: 'Inter', sans-serif; }
+        .accordion-content { transition: max-height 0.3s ease-out; overflow: hidden; }
+        .stepper-container { display: flex; justify-content: space-between; position: relative; width: 90%; margin: 0 auto 3.5rem auto; }
+        .stepper-container::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 4px; background-color: #e2e8f0; transform: translateY(-50%); z-index: 1; }
+        #progress-line { position: absolute; top: 50%; left: 0; height: 4px; background-color: #3b82f6; transform: translateY(-50%); z-index: 2; width: 0%; transition: width 0.4s ease; }
+        .step { position: relative; z-index: 3; width: 40px; height: 40px; border-radius: 50%; background-color: white; border: 4px solid #e2e8f0; display: flex; justify-content: center; align-items: center; font-weight: 600; color: #94a3b8; transition: all 0.4s ease; }
+        .step.active { border-color: #3b82f6; background-color: #3b82f6; color: white; }
+        .step.completed { border-color: #3b82f6; background-color: #3b82f6; color: white; }
+        .step .step-label { display: none; position: absolute; top: 50px; left: 50%; transform: translateX(-50%); width: 150px; text-align: center; font-size: 0.875rem; font-weight: 500; color: #475569; }
+        .step.active .step-label, .step.completed .step-label { display: block; }
+        .panel { display: none; animation: fadeIn 0.5s ease; border-top: 1px solid #e2e8f0; padding-top: 1.5rem; }
+        .panel.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-btn { display: inline-flex; align-items: center; padding: 0.75rem 1.5rem; font-weight: 600; border-radius: 0.5rem; transition: background-color 0.2s ease; cursor: pointer; }
+        .loader-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center; z-index: 9999; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; }
+        .loader-overlay.visible { opacity: 1; visibility: visible; }
+        .loader-content { background-color: white; padding: 2.5rem; border-radius: 0.75rem; text-align: center; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); display: flex; align-items: center; gap: 1.5rem; }
+        .spinner { box-sizing: border-box; border: 6px solid #e0e7ff; border-radius: 50%; border-top-color: #3b82f6; width: 50px; height: 50px; animation: spin 1s linear infinite; }
+        .spinner-small { box-sizing: border-box; border: 4px solid #dbeafe; border-radius: 50%; border-top-color: #60a5fa; width: 30px; height: 30px; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-slate-100">
+
+    <div id="loader-overlay" class="loader-overlay">
+        <div class="loader-content"><div class="spinner"></div><span id="loader-text" class="text-lg font-semibold text-slate-700">Generando...</span></div>
+    </div>
+
+    <div class="container mx-auto p-4 md:p-8">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6 md:p-10">
+            <header class="text-center mb-8">
+                <div class="flex justify-center items-center gap-4"><svg class="w-12 h-12 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2h1a2 2 0 002-2v-1a2 2 0 012-2h1.945M7.881 4.042A.25.25 0 007.63 3.5H4.37a.25.25 0 00-.251.542l.38 1.903A2 2 0 006.38 7.5H7.5a2 2 0 002-2V4.618l-.619-.576zM16.119 4.042a.25.25 0 01.251-.542h3.259a.25.25 0 01.251.542l-.38 1.903A2 2 0 0117.62 7.5H16.5a2 2 0 01-2-2V4.618l.619-.576z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11v1m0 4v1m0-8v1"></path></svg><h1 class="text-3xl md:text-4xl font-bold text-slate-800">Solucionador de Problemas Docentes</h1></div>
+                <p class="mt-3 text-slate-600">Una guía híbrida (IA + Experto) basada en la normativa peruana</p>
+            </header>
+            <main>
+                <div id="selection-container">
+                    <p class="mb-6 text-slate-700"><b>Paso 1:</b> Seleccione la categoría y el problema que enfrenta. Luego, haga clic en el botón para iniciar la generación de su guía de acción.</p>
+                    <div id="accordion-container" class="space-y-4">
+                        <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700 text-left">1. Conflictos y Violencia en el Entorno Laboral</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><option value="">-- Seleccione un problema --</option><option value="acoso-laboral">Acoso laboral (hostigamiento sistemático)</option><option value="agresion-director">Agresión psicológica o verbal del Director/a</option><option value="agresion-colega">Agresión psicológica o verbal de un colega</option><option value="abuso-autoridad">Abuso de autoridad</option><option value="discriminacion-laboral">Discriminación (por origen, género, etc.)</option><option value="difamacion">Calumnia o difamación</option><option value="carga-horaria-injusta">Asignación injusta de carga horaria</option></select></div></div></div>
+                        <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700 text-left">2. Procesos Administrativos y Sanciones</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><option value="">-- Seleccione un problema --</option><option value="memorandum">Recepción de memorándum</option><option value="proceso-amonestacion">Inicio de proceso de amonestación o suspensión</option><option value="inicio-pad">Inicio de Proceso Administrativo Disciplinario (PAD)</option><option value="problemas-contrato">Problemas con la renovación de contrato</option><option value="problemas-pagos">Problemas con pagos</option><option value="negativa-licencia">Negativa o demora en trámite de licencias</option><option value="cese-arbitrario">Cese arbitrario o no justificado</option></select></div></div></div>
+                        <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700 text-left">3. Acusaciones Graves</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><option value="">-- Seleccione un problema --</option><option value="acusacion-tocamientos">Denuncia por tocamientos indebidos o acoso sexual</option><option value="acusacion-violacion">Acusación o denuncia por violación</option><option value="acusacion-agresion-fisica">Denuncia por agresión física a un estudiante</option><option value="acusacion-agresion-psicologica">Denuncia por agresión psicológica a un estudiante</option><option value="acusacion-discriminacion-estudiante">Denuncia por discriminación a un estudiante</option><option value="acusacion-cobros-indebidos">Acusación por cobros indebidos</option></select></div></div></div>
+                        <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700 text-left">4. Conflictos con Padres de Familia</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><option value="">-- Seleccione un problema --</option><option value="agresion-padres">Agresión verbal o amenaza de un padre/madre</option><option value="quejas-infundadas">Presentación de quejas o denuncias infundadas</option><option value="interferencia-labor">Interferencia constante en la labor pedagógica</option><option value="ciberacoso-padres">Ciberacoso por parte de padres</option></select></div></div></div>
+                        <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700 text-left">5. Derechos y Condiciones Laborales</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><option value="">-- Seleccione un problema --</option><option value="infraestructura-deficiente">Condiciones de infraestructura deficientes o inseguras</option><option value="falta-materiales">Falta de materiales y recursos pedagógicos</option><option value="vulneracion-sindical">Vulneración del derecho a la libre sindicalización</option><option value="problemas-evaluacion">Problemas con la Evaluación de Desempeño o Ascenso</option><option value="sobrecarga-laboral">Sobrecarga laboral (burnout)</option></select></div></div></div>
+                        <div class="border border-slate-200 rounded-lg"><button class="accordion-header w-full flex justify-between items-center p-4 bg-slate-50 hover:bg-slate-100 transition duration-200 rounded-t-lg"><span class="font-semibold text-lg text-slate-700 text-left">6. Problemas con la UGEL / DRE</span><svg class="w-6 h-6 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg></button><div class="accordion-content max-h-0"><div class="p-4 border-t border-slate-200"><select class="problem-selector w-full p-3 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-500"><option value="">-- Seleccione un problema --</option><option value="trato-hostil-ugel">Trato hostil o negligente de personal</option><option value="demora-tramites">Demora excesiva en trámites</option><option value="falta-respuesta-ugel">Falta de respuesta a solicitudes</option><option value="informacion-erronea">Información administrativa contradictoria</option></select></div></div></div>
+                    </div>
+                    <div id="generate-button-container" class="mt-6 text-center"><button id="start-generator-btn" class="hidden bg-blue-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-blue-700">Iniciar Guía de Acción</button></div>
+                </div>
+                <div id="generator-container" style="display: none;"><div id="stepper" class="stepper-container mb-8"></div><div id="panels-container"></div></div>
+            </main>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const selectionContainer = document.getElementById('selection-container');
+            const generatorContainer = document.getElementById('generator-container');
+            const accordionHeaders = document.querySelectorAll('.accordion-header');
+            const problemSelectors = document.querySelectorAll('.problem-selector');
+            const startGeneratorBtn = document.getElementById('start-generator-btn');
+            const stepperContainer = document.getElementById('stepper');
+            const panelsContainer = document.getElementById('panels-container');
+            const loaderOverlay = document.getElementById('loader-overlay');
+            let currentProblem = { id: null, text: null };
+            let currentStep = 0;
+            const steps = ["Descripción", "Evidencias", "Marco Legal", "Procedimiento", "Descarga"];
+            let generatedContent = {};
+
+            accordionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const svg = header.querySelector('svg');
+                    const isCurrentlyOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+                    
+                    accordionHeaders.forEach(h => {
+                        h.nextElementSibling.style.maxHeight = '0px';
+                        h.querySelector('svg').classList.remove('rotate-180');
+                    });
+
+                    if (!isCurrentlyOpen) {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        svg.classList.add('rotate-180');
+                    }
+                });
+            });
+
+            problemSelectors.forEach(selector => {
+                selector.addEventListener('change', (e) => {
+                    if (e.target.value) {
+                        problemSelectors.forEach(s => { if (s !== e.target) s.value = ''; });
+                        currentProblem = { id: e.target.value, text: e.target.options[e.target.selectedIndex].text };
+                        startGeneratorBtn.classList.remove('hidden');
+                    } else { startGeneratorBtn.classList.add('hidden'); }
+                });
+            });
+            startGeneratorBtn.addEventListener('click', () => {
+                if (currentProblem.id) {
+                    selectionContainer.style.display = 'none';
+                    generatorContainer.style.display = 'block';
+                    initializeGeneratorUI();
+                }
+            });
+            function initializeGeneratorUI() {
+                const progressLine = document.createElement('div');
+                progressLine.id = 'progress-line';
+                stepperContainer.appendChild(progressLine);
+                steps.forEach((title, index) => {
+                    const stepElement = document.createElement('div');
+                    stepElement.className = 'step';
+                    stepElement.textContent = index + 1;
+                    const label = document.createElement('span');
+                    label.className = 'step-label';
+                    label.textContent = title;
+                    stepElement.appendChild(label);
+                    stepperContainer.appendChild(stepElement);
+                    const panelElement = document.createElement('div');
+                    panelElement.className = 'panel';
+                    panelElement.id = `panel-${index}`;
+                    panelsContainer.appendChild(panelElement);
+                });
+                renderStepContent(currentStep);
+                updateUI();
+            }
+            function renderStepContent(stepIndex) {
+                const panel = document.getElementById(`panel-${stepIndex}`);
+                const stepTitle = steps[stepIndex];
+                let contentHTML = `<h2 class="text-2xl font-bold text-slate-800 mb-6">${stepTitle}</h2>`;
+                if (stepIndex < steps.length - 1) {
+                    contentHTML += `<div id="content-area-${stepIndex}"></div>`;
+                    panel.innerHTML = contentHTML;
+                    if (!generatedContent[stepIndex]) {
+                        generateAIContent(stepIndex);
+                    } else {
+                        document.getElementById(`content-area-${stepIndex}`).innerHTML = generatedContent[stepIndex];
+                    }
+                } else {
+                    contentHTML += `<div class="bg-slate-50 p-6 rounded-lg text-center"><p class="text-lg text-slate-700 mb-4">¡Hoja de Ruta completada!</p><p class="text-slate-600 mb-6">Ahora puedes descargar el documento final.</p><button id="download-btn" class="nav-btn bg-green-600 text-white hover:bg-green-700 justify-center">Descargar Documento en Word</button></div>`;
+                    panel.innerHTML = contentHTML;
+                    document.getElementById('download-btn').addEventListener('click', downloadWordDoc);
+                }
+                addNavigationButtons(panel, stepIndex);
+            }
+            function addNavigationButtons(panel, stepIndex) {
+                const navContainer = document.createElement('div');
+                navContainer.className = 'mt-8 flex justify-between';
+                const prevBtn = document.createElement('button');
+                prevBtn.textContent = 'Anterior';
+                prevBtn.className = 'nav-btn bg-slate-200 text-slate-700 hover:bg-slate-300';
+                prevBtn.style.visibility = stepIndex > 0 ? 'visible' : 'hidden';
+                prevBtn.addEventListener('click', () => { currentStep--; renderStepContent(currentStep); updateUI(); });
+                navContainer.appendChild(prevBtn);
+                if (stepIndex < steps.length - 1) {
+                    const nextBtn = document.createElement('button');
+                    nextBtn.textContent = 'Siguiente';
+                    nextBtn.className = 'nav-btn bg-blue-600 text-white hover:bg-blue-700';
+                    nextBtn.addEventListener('click', () => { currentStep++; renderStepContent(currentStep); updateUI(); });
+                    navContainer.appendChild(nextBtn);
+                }
+                panel.appendChild(navContainer);
+            }
+            function updateUI() {
+                const progressLine = document.getElementById('progress-line');
+                const percentage = (currentStep / (steps.length - 1)) * 100;
+                progressLine.style.width = `${percentage}%`;
+                document.querySelectorAll('.step').forEach((step, index) => {
+                    step.classList.remove('active', 'completed');
+                    if (index < currentStep) step.classList.add('completed');
+                    else if (index === currentStep) step.classList.add('active');
+                });
+                document.querySelectorAll('.panel').forEach((panel, index) => {
+                    panel.classList.toggle('active', index === currentStep);
+                });
+            }
+
+            // --- INICIO DE LA MODIFICACIÓN FINAL ---
+            async function generateAIContent(stepIndex) {
+                const contentArea = document.getElementById(`content-area-${stepIndex}`);
+                // Muestra el spinner CON TEXTO mientras se genera el contenido
+                contentArea.innerHTML = '<div class="flex justify-center items-center p-8"><div class="spinner-small"></div><span class="ml-3 text-slate-500 font-medium">Generando contenido...</span></div>';
+                
+                const stepTitle = steps[stepIndex];
+                const problemaTexto = currentProblem.text;
+                const rolExperto = "Actúa como un abogado experto en legislación educativa peruana, con un tono empático y sumamente detallista.";
+                const formatoRespuesta = "Responde en FORMATO HTML simple, usando <p>, <ul>, <li> y <strong>. No repitas el título de la sección en tu respuesta, solo escribe el contenido.";
+                let prompt;
+
+                switch (stepTitle) {
+                    case "Descripción": prompt = `${rolExperto} Para "${problemaTexto}", genera el contenido para "Descripción del Problema". Explica en qué consiste. ${formatoRespuesta}`; break;
+                    case "Evidencias": prompt = `${rolExperto} Para "${problemaTexto}", genera una lista de "Evidencias a Recopilar". Describe cada una brevemente. ${formatoRespuesta}`; break;
+                    case "Marco Legal": prompt = `${rolExperto} Para "${problemaTexto}", genera el contenido para "Marco Legal Aplicable". Cita 3 a 5 leyes y explica su relevancia. ${formatoRespuesta}`; break;
+                    case "Procedimiento": prompt = `${rolExperto} Para "${problemaTexto}", genera el contenido para "Procedimiento a Seguir". Detalla un plan de acción paso a paso. ${formatoRespuesta}`; break;
+                }
+                
+                try {
+                    const htmlContent = await callAIApi(prompt);
+                    generatedContent[stepIndex] = htmlContent;
+                    contentArea.innerHTML = htmlContent;
+                } catch (error) { 
+                    contentArea.innerHTML = `<p class="text-red-500 text-center">Error al generar contenido para esta sección.</p>`;
+                }
+            }
+            // --- FIN DE LA MODIFICACIÓN FINAL ---
+
+            async function callAIApi(prompt) {
+                try {
+                    const response = await fetch('/.netlify/functions/gemini-api', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ prompt }) });
+                    if (!response.ok) throw new Error(`Error del servidor: ${response.status}`);
+                    const result = await response.json();
+                    if (result.candidates && result.candidates[0].content.parts[0].text) {
+                        let text = result.candidates[0].content.parts[0].text;
+                        return text.replace(/^```(html)?\n/, '').replace(/\n```$/, '');
+                    } else { throw new Error("Respuesta inesperada de la API."); }
+                } catch (error) { console.error("Error en callAIApi:", error); throw error; }
+            }
+            async function downloadWordDoc() {
+                loaderOverlay.classList.add('visible');
+                loaderOverlay.querySelector('#loader-text').textContent = 'Generando documento Word...';
+                let cleanHtml = "";
+                steps.forEach((title, index) => {
+                    if (index < steps.length - 1) { // No incluir el paso de "Descarga"
+                        cleanHtml += `<h4>${index + 1}. ${title}</h4>`;
+                        cleanHtml += generatedContent[index] || '';
+                    }
+                });
+                try {
+                    const response = await fetch('/.netlify/functions/generate-word', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ htmlContent: cleanHtml, problemTitle: currentProblem.text }) });
+                    if (!response.ok) throw new Error('Error al generar el documento.');
+                    const blob = await response.blob();
+                    saveAs(blob, `Hoja de Ruta - ${currentProblem.text}.docx`);
+                } catch (error) {
+                    console.error("Error en la descarga:", error);
+                    alert("Hubo un error al generar el documento Word.");
+                } finally { loaderOverlay.classList.remove('visible'); }
+            }
+        });
+    </script>
+</body>
+</html>
