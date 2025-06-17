@@ -1,3 +1,7 @@
 # Local Netlify folder
 .netlify
+# Ignorar variables de entorno
 .env
+
+# Ignorar todas las dependencias de Node
+node_modules/
